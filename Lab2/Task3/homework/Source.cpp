@@ -1,53 +1,69 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
+#include <time.h>
 
-void swap(int &a, int &b) {
-	a = a^b;
-	b = a^b;
-	a = a^b;
+void initArray(int *arr, int len, int n)
+{
+	for (int i = 0; i < len; ++i)
+	{
+		arr[i] = rand() % n + 1;
+	}
 }
 
-void swap(int* arr, int start, int end)
+void printArray(int *arr, int len)
 {
-	for (int i = start; i < (start + end) / 2; ++i)
-		swap(arr[i], arr[end - i + start - 1]);
-}
-
-void print(int* arr, int len)
-{
-	for (int i = 0; i < len; i++)
+	for (int i = 0; i < len; ++i)
 	{
 		printf("%d ", arr[i]);
 	}
 	printf("\n");
 }
 
+void countingSort(int *arr, int len, int n, int *helpingArr)
+{
+	int count = 0;
+	for (int i = 0; i < len; ++i)
+	{
+		++helpingArr[arr[i] - 1];
+	}
+
+	int number = 0;
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < helpingArr[i]; ++j)
+		{
+			arr[number] = i;
+			++number;
+		}
+	}
+}
+
 int main()
 {
 	setlocale(LC_ALL, "Russian");
-	srand(time(0));
+	srand(time(nullptr));
 
-	printf("‚ведите длинну отрезка n\n");
+	printf("Введите длину массива\n");
+	int len = 0;
+	scanf("%d", &len);
+	int *arr = new int[len];
+	printf("Значения в массиве будут в диапазоне от 1 до n, введите n\n");
 	int n = 0;
 	scanf("%d", &n);
-	printf("‚ведите длинну отрезка m\n");
-	int m = 0;
-	scanf("%d", &m);
-
-	int* arr = new int[n + m];
-	for (int i = 0; i < n + m; ++i)
+	int *helpingArr = new int[n];
+	for (int i = 0; i < n; ++i)
 	{
-		arr[i] = rand() % 90 + 10;
+		helpingArr[i] = 0;
 	}
 
-	print(arr, n + m);
-	swap(arr, 0, n);
-	swap(arr, n, n + m);
-	swap(arr, 0, n + m);
-	print(arr, n + m);
+	initArray(arr, len, n);
+	printf("Неотсортированный массив:\n");
+	printArray(arr, len);
 
-	delete[] arr;
-	
+	countingSort(arr, len, n, helpingArr);
+	printf("Отсортированный массив:\n");
+	printArray(arr, len);
+
 	system("PAUSE");
 	return 0;
 }
