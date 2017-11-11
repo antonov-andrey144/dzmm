@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+
+# Compiled C++
+*.tlog
+*.pdb
+*.ipdb
+*.iobj
+*.idb
+*.log
+*.ipch
+*.ilk
+*.suo
+*.db
+*.opendb
