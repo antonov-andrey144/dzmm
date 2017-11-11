@@ -5,12 +5,12 @@ int main()
 {
 	setlocale(LC_ALL, "Russian");
 
-	printf("¬ведите значение x дл€ вычислени€ формулы x^4 + x^3 + x^2 + x + 1\nx = ");
+	printf("Введите значение x для вычисления формулы x^4 + x^3 + x^2 + x + 1\nx = ");
 	int x = 0;
 	scanf("%d", &x);
 	int squareX = x * x;
 	int expressionValue = (squareX + 1) * (squareX + x) + 1;
-	printf("«начение формулы = %d\n", expressionValue);
+	printf("Значение формулы = %d\n", expressionValue);
 	
 	system("PAUSE");
 	return 0;
