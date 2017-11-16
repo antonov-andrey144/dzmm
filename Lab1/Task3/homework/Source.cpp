@@ -1,16 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
+#include <time.h>
 
 void swap(int &a, int &b) {
 	a = a^b;
 	b = a^b;
 	a = a^b;
-}
-
-void swap(int* arr, int start, int end)
-{
-	for (int i = start; i < (start + end) / 2; ++i)
-		swap(arr[i], arr[end - i + start - 1]);
 }
 
 void print(int* arr, int len)
