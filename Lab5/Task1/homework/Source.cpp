@@ -91,7 +91,7 @@ void removeElement(List& list, int element)
 
 	if (node == nullptr)
 	{
-		while (list.start != nullptr && list.start->data == element) //если нужно удал¤ть не все одинаковые, а один то if вместо while
+		while (list.start != nullptr && list.start->data == element) //если нужно удалять не все одинаковые, а один то if вместо while
 		{
 			Node* tnode = list.start;
 			list.start = list.start->next;
@@ -100,7 +100,7 @@ void removeElement(List& list, int element)
 	}
 	else
 	{
-		while (node->next != nullptr && node->next->data == element) //если нужно удал¤ть не все одинаковые, а один то if вместо while
+		while (node->next != nullptr && node->next->data == element) //если нужно удалять не все одинаковые, а один то if вместо while
 		{
 			Node* tnode = node->next;
 			node->next = tnode->next;
