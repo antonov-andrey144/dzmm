@@ -81,15 +81,15 @@ Node* createNode(char* str)
 	//printf("creating \"%s\"\n", str);
 	if (str[0] == '(')
 	{
-		//printf("created operation node %c\n", str[2]);
-		result = createOperationNode(str[2], createNode(str + 4), createNode(offsetStr(str + 4)));
+		//printf("created operation node %c\n", str[1]);
+		result = createOperationNode(str[1], createNode(str + 3), createNode(offsetStr(str + 3)));
 	}
 	else
 	{
 		int value = 0;
 		int sign = str[0] == '-' ? -1 : 1;
 
-		for (int i = str[0] == '-' ? 1 : 0; str[i] != ' '; ++i)
+		for (int i = str[0] == '-' ? 1 : 0; str[i] != ' ' && str[i] != ')'; ++i)
 		{
 			value = 10 * value + str[i] - '0';
 		}
@@ -144,38 +144,35 @@ int nodeValue(Node* node)
 	}
 }
 
-void printNode(Node* node, int level)
+void printNode(Node* node)
 {
-	if (node->left != nullptr)
-	{
-		printNode(node->left, level + 1);
-	}
-
-	for (int i = 0; i < level; ++i)
-	{
-		printf("  ");
-	}
 	if (node->isValue)
 	{
-		printf("%d\n", node->data);
+		printf("%d ", node->data);
 	}
 	else
 	{
-		printf("%c\n", node->data);
+		printf("( %c ", node->data);
+	}
+
+	if (node->left != nullptr)
+	{
+		printNode(node->left);
 	}
 
 	if (node->right != nullptr)
 	{
-		printNode(node->right, level + 1);
+		printNode(node->right);
+		printf(") ");
 	}
 }
 
 ArithmeticTree * createTree(char* filename)
 {
-	FILE* pFile = fopen(filename, "r");
+	FILE* file = fopen(filename, "r");
 	char str[200] = "";
-	fgets(str, 200, pFile);
-	fclose(pFile);
+	fgets(str, 200, file);
+	fclose(file);
 
 	return new ArithmeticTree{ createNode(str) };
 }
@@ -192,5 +189,6 @@ int arithmeticTreeResult(ArithmeticTree* tree)
 
 void arithmeticTreePrint(ArithmeticTree * tree)
 {
-	printNode(tree->root, 0);
+	printNode(tree->root);
+	printf("\n");
 }
