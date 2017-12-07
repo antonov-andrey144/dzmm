@@ -1,13 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 
-void swap(int &a, int &b) 
-{
-	int c = a;
-	a = b;
-	b = c;
-}
-
 struct Node
 {
 	int data = 0;
@@ -91,29 +84,13 @@ void printList(List& list)
 
 void deleteList(List& list)
 {
-	Node* node;
-
 	while (list.start != nullptr)
 	{
-		node = list.start;
+
+		Node* node = list.start;
 		list.start = list.start->next;
 		delete node;
 	}
-}
-
-void reverse(List* list)
-{
-	Node* temp = list->start->next;
-	Node* newstart = list->start;
-	newstart->next = nullptr;
-	while (temp != nullptr)
-	{
-		Node* ttemp = temp;
-		temp = temp->next;
-		ttemp->next = newstart;
-		newstart = ttemp;
-	}
-	list->start = newstart;
 }
 
 void initList(List &list, int len)
@@ -128,6 +105,70 @@ void initList(List &list, int len)
 	fclose(file);
 }
 
+int maxCount (List list)
+{
+	Node* tempNode = list.start;
+	int count = 0;
+	int maxCount = 0;
+	while (tempNode != nullptr)
+	{
+		while (tempNode->next != nullptr &&(tempNode->data < tempNode->next->data ))
+		{
+			++count;
+			tempNode = tempNode->next;
+		}
+		++count;
+		tempNode = tempNode->next;
+		if (count > maxCount)
+		{
+			maxCount = count;
+		}
+		count = 0;
+	}
+	return maxCount;
+}
+
+int findeIndex(List list, int maxCount)
+{
+	Node* tempNode = list.start;
+	int count = 0;
+	int index = 0;
+	while (tempNode->next != nullptr)
+	{
+		while (tempNode->next != nullptr && (tempNode->data < tempNode->next->data))
+		{
+			++count;
+			++index;
+			tempNode = tempNode->next;
+		}
+		++count;
+		++index;
+		if (count == maxCount)
+		{
+			index -= count;
+			return index;
+		}
+		tempNode = tempNode->next;
+		count = 0;
+	}
+	return 0;
+}
+
+void initNewList(List list, List& newList, int index, int maxCount)
+{
+	Node* tempNode = list.start;
+
+	for (int i = 0; i < index; ++i)
+	{
+		tempNode = tempNode->next;
+	}
+	for (int i = 0; i < maxCount; ++i)
+	{
+		addElement(newList, tempNode->data);
+		tempNode = tempNode->next;
+	}
+}
+
 int main()
 {
 	setlocale(LC_ALL, "Russian");
@@ -136,15 +177,27 @@ int main()
 	int len = countElements();
 	initList(list, len);
 
-	printf("Лист до:\n");
+	printf("Лист:\n");
 	printList(list);
 
-	reverse(&list);
-
-	printf("\nЛист после:\n");
-	printList(list);
+	int mostCount = maxCount(list);
+	int index = findeIndex(list, mostCount);
+	List newList;
+	if (index != 0)
+	{
+		initNewList(list, newList, index, mostCount);
+		printf("Новый лист:");
+		printList(newList);
+	}
+	else 
+	{
+		printf("Лист пуст");
+	}
 
 	deleteList(list);
-	system("Pause");
+	deleteList(newList);
+	int pause = 0;
+	printf("\nВведите что-нибудь для выхода из программы\n");
+	scanf("%d", &pause);
 	return 0;
 }
