@@ -2,6 +2,27 @@
 #include <iostream>
 #include <time.h>
 
+void swap(int &a, int &b) 
+{
+	int c = a;
+	a = b;
+	b = c;
+}
+
+void bubbleSort(int* arr, int length)
+{
+	for (int i = 0; i < length; ++i)
+	{
+		for (int j = 0; j < length - i - 1; ++j)
+		{
+			if (arr[j] > arr[j + 1])
+			{
+				swap(arr[j], arr[j + 1]);
+			}
+		}
+	}
+}
+
 void initArray(int *arr, int len, int n)
 {
 	for (int i = 0; i < len; ++i)
@@ -19,8 +40,9 @@ void printArray(int *arr, int len)
 	printf("\n");
 }
 
-void countingSort(int *arr, int len, int n, int *helpingArr)
+void countingSort(int *arr, int len, int n)
 {
+	int *helpingArr = new int[n] {};
 	int count = 0;
 	for (int i = 0; i < len; ++i)
 	{
@@ -32,10 +54,44 @@ void countingSort(int *arr, int len, int n, int *helpingArr)
 	{
 		for (int j = 0; j < helpingArr[i]; ++j)
 		{
-			arr[number] = i;
+			arr[number] = i + 1;
 			++number;
 		}
 	}
+	delete[] helpingArr;
+}
+
+void printMenu()
+{
+	printf("\tМеню\n1 - заполнить массив случайными значениями/перезаполнить массив\n2 - сортировка подсчётом\n3 - сортировка пузырьком\n0 - выход\n\tВаш выбор: ");
+}
+
+void menuWorking(int choice, int *arr, int len, int n)
+{
+	switch (choice)
+	{
+	case 1:
+		initArray(arr, len, n);
+		printf("Неотсортированный массив: \n");
+		printArray(arr, len);
+		printMenu();
+		break;
+
+	case 2:
+		countingSort(arr, len, n);
+		printf("Отсортированный массив: \n");
+		printArray(arr, len);
+		printMenu();
+		break;
+
+	case 3:
+		bubbleSort(arr, len);
+		printf("Отсортированный массив: \n");
+		printArray(arr, len);
+		printMenu();
+
+	}
+
 }
 
 int main()
@@ -50,20 +106,15 @@ int main()
 	printf("Значения в массиве будут в диапазоне от 1 до n, введите n\n");
 	int n = 0;
 	scanf("%d", &n);
-	int *helpingArr = new int[n];
-	for (int i = 0; i < n; ++i)
+	printMenu();
+
+	int choice = -1;
+	while (choice != 0)
 	{
-		helpingArr[i] = 0;
+		scanf("%d", &choice);
+		menuWorking(choice, arr, len, n);
 	}
 
-	initArray(arr, len, n);
-	printf("Неотсортированный массив:\n");
-	printArray(arr, len);
-
-	countingSort(arr, len, n, helpingArr);
-	printf("Отсортированный массив:\n");
-	printArray(arr, len);
-
-	system("PAUSE");
+	delete[] arr;
 	return 0;
 }

@@ -50,6 +50,9 @@ int main()
 	int *arr = new int[len];
 
 	initArray(arr, len);
+	printf("Неотсортированный массив: \n");
+	printArray(arr, len);
+	printf("Oтсортированный массив: \n");
 	bubbleSort(arr, len);
 	printArray(arr, len);
 
