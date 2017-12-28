@@ -1,89 +1,82 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
-#include "list.h"
 
-int **initMatrix(int rows, int cols)
+using namespace std;
+
+enum class Status
 {
-	int **matr = new int*[rows];
-	for (int i = 0; i < rows; ++i)
-	{
-		matr[i] = new int[cols] {0};
-	}
-	return matr;
+	start,
+	readNextSymbol,
+	fail
+};
+
+bool isRight(char arr)
+{
+	return(isalpha(arr) || isdigit(arr) || arr == '_');
 }
 
-void deleteMatrix(int **matr, int rows, int cols)
+int main(int argc, char** argv)
 {
-	for (int i = 0; i < rows; ++i)
+	setlocale(LC_ALL, "Russian");
+	char str[200];
+	printf("Введите строку:\n");
+	scanf("%s", str);
+
+	int i = 0;
+	Status state = Status::start;
+	while (str[i] != '\0')
 	{
-		delete[] matr[i];
-	}
-	delete[] matr;
-}
-
-void BFS(bool *visited, int unit, int n, int **matrix)
-{
-	int *queue = new int[n];
-	int count = 0;
-	int head = 0;
-	for (int i = 0; i < n; ++i)
-	{
-		queue[i] = 0;
-	}
-	queue[count + 1] = unit;
-	++count;
-	visited[unit] = true;
-	while (head < count)
-	{
-		unit = queue[head + 1];
-		++head;
-		printf("%d ", unit + 1);
-		for (int i = 0; i < n; ++i)
-			if (matrix[unit][i] && !visited[i])
-			{
-				queue[count + 1] = i;
-				++count;
-				visited[i] = true;
-			}
-	}
-
-	//delete[] queue;
-
-}
-
-int main()
-{
-	setlocale(LC_ALL, "RUSSIAN");
-	FILE* file = fopen("matrix.txt", "r");
-	int n = 0;
-	int m = 0;
-	fscanf(file, "%d", &n);
-	m = n;
-	int **matrix = initMatrix(n, m);
-
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < m; ++j)
+		switch (state)
 		{
-			fscanf(file, "%d", &matrix[i][j]);
+		case Status::start:
+			if (isalpha(str[i]))
+			{
+				state = Status::readNextSymbol;
+				++i;
+			}
+			else
+			{
+				state = Status::fail;
+			}
+			break;
+
+		case Status::readNextSymbol:
+		{
+			if (!isRight(str[i]))
+			{
+				state = Status::fail;
+				break;
+			}
+			else
+			{
+				state = Status::readNextSymbol;
+				++i;
+			}
+			break;
+		}
+
+		default:
+		{
+			state = Status::fail;
+			break;
+		}
+		}
+		if (state == Status::fail)
+		{
+			break;
 		}
 	}
-	fclose(file);
 
-	bool *visited = new bool[n];
-
-	for (int i = 0; i < n; ++i)
+	if (state != Status::readNextSymbol)
 	{
-		visited[i] = false;
+		printf("Неправильная строка\n");
+	}
+	else
+	{
+		printf("Правильная строка\n");
 	}
 
-	BFS(visited, 0, n, matrix);
-
-	delete[] visited;
-
-	deleteMatrix(matrix, n, m);
 	int pause = 0;
-	printf("\n");
-	scanf("%d", &pause);
+	scanf("%d", pause);
 	return 0;
 }
