@@ -15,7 +15,7 @@ bool isRight(char arr)
 	return(isalpha(arr) || isdigit(arr) || arr == '_');
 }
 
-int main(int argc, char** argv)
+int main()
 {
 	setlocale(LC_ALL, "Russian");
 	char str[200];
