@@ -1,10 +1,6 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
 
-/**
-	making root of Arithmetic Tree
-	@return pointer of root
-*/
 struct ArithmeticTree; 
 
 /**

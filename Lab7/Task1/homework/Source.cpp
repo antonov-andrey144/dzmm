@@ -86,9 +86,7 @@ int main()
 		scanf("%d", &choice);
 		makeChoice(choice, set);
 	} while (choice != 0);
-
 	deleteSet(set);
 
-	system("PAUSE");
 	return 0;
 }

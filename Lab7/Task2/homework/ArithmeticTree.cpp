@@ -2,12 +2,6 @@
 #include <iostream>
 #include "ArithmeticTree.h"
 
-/**
-	@param isValue separation to symbol and number
-	@param data it's just a data)0))00
-	@param left pointer to left son
-	@param right pointer to right son
-*/
 struct Node
 {
 	bool isValue;
@@ -78,10 +72,8 @@ char* offsetStr(char* str)
 Node* createNode(char* str)
 {
 	Node* result = nullptr;
-	//printf("creating \"%s\"\n", str);
 	if (str[0] == '(')
 	{
-		//printf("created operation node %c\n", str[1]);
 		result = createOperationNode(str[1], createNode(str + 3), createNode(offsetStr(str + 3)));
 	}
 	else
@@ -94,8 +86,6 @@ Node* createNode(char* str)
 			value = 10 * value + str[i] - '0';
 		}
 		value *= sign;
-
-		//printf("created value node %d\n", value);
 
 		result = createValueNode(value);
 	}
@@ -180,6 +170,7 @@ ArithmeticTree * createTree(char* filename)
 void deleteTree(ArithmeticTree* tree)
 {
 	deleteNode(tree->root);
+	delete tree;
 }
 
 int arithmeticTreeResult(ArithmeticTree* tree)
