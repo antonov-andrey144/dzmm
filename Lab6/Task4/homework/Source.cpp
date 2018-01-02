@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "List.h"
 #include "ListMergeSort.h"
 #include "ConsoleWork.h"
@@ -13,6 +14,7 @@ int main()
 
 	endWork(list);
 
-	system("pause");
+	int pause = 0;
+	scanf("%d", &pause);
 	return 0;
 }
