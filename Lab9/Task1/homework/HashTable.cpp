@@ -2,11 +2,13 @@
 #include "List.h"
 #include <iostream>
 
-struct HashTable {
+struct HashTable 
+{
 	int length;
 	List** lists;
 };
 
+// ...
 int getHash(Element str, int hashSize) // хеш-функция
 {
 	int result = 0;

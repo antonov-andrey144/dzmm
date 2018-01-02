@@ -8,10 +8,9 @@ int main()
 
 	FILE* file = fopen("input.txt", "r");
 
-	char* str;
 	while (!feof(file))
 	{
-		str = new char[50];
+		char* str = new char[50];
 		fscanf(file, "%s", str);
 		hashTableAdd(table, str);
 	}
@@ -24,6 +23,7 @@ int main()
 
 	hashTableDelete(table);
 
-	system("pause");
+	int pause = 0;
+	scanf("%d", &pause);
 	return 0;
 }

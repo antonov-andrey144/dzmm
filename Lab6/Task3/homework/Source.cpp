@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include "Stack.h" 
 
@@ -171,9 +172,11 @@ int main()
 	char str[60] = "((3 - 2) * 4 + 5 * (7 - 4)) * (3 - 4 / (7 - 5) + 4)";
 	printf("\"%s\"\n", str);
 	char* rpn = convertToReversePolishNotation(str);
-	printf("\" %s \"\n", convertToReversePolishNotation(str));
+	printf("\" %s \"\n", rpn);
 	printf("\" %d \"\n", calculateReversePolishNotation(rpn));
 	
-	system("PAUSE");
+	delete[] rpn;
+	int pause = 0;
+	scanf("%d", &pause);
 	return EXIT_SUCCESS;
 }

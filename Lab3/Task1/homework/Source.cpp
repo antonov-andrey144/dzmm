@@ -85,6 +85,7 @@ int main()
 	printArray(arr, n);
 
 	delete[] arr;
-	system("PAUSE");
+	int pause = 0;
+	scanf("%d", &pause);
 	return 0;
 }
