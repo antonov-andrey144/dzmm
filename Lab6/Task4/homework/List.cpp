@@ -1,5 +1,18 @@
 #include "List.h"
 
+struct Node
+{
+	Contact contact;
+	Node* next;
+};
+
+struct List
+{
+	int length;
+	Node* start;
+	Node* last;
+};
+
 Node* nodeCreate(Contact contact, Node* next)
 {
 	return new Node{ contact, next };
@@ -23,6 +36,11 @@ List* listCreate()
 List* listCreate(Node* node)
 {
 	return new List{ 1, node, node };
+}
+
+int listLength(List* list)
+{
+	return list->length;
 }
 
 void listAddFirst(List* list, Node* node)
@@ -65,8 +83,7 @@ void listAppend(List* list, List* append)
 	append->length = 0;
 }
 
-Node* listExtractFirst(List* list) 
-{
+Node* listExtractFirst(List* list) {
 	if (list == nullptr || list->start == nullptr)
 	{
 		return nullptr;
@@ -79,18 +96,6 @@ Node* listExtractFirst(List* list)
 	result->next = nullptr;
 	list->length--;
 	return result;
-}
-
-int listLength(List* list)
-{
-	int length = 0;
-	Node* temp = list->start;
-	while (temp != nullptr)
-	{
-		temp = temp->next;
-		length++;
-	}
-	return length;
 }
 
 void listPrint(List* list)
@@ -110,10 +115,12 @@ void listPrint(List* list)
 
 void listDelete(List* &list)
 {
-	if (list == nullptr) return;
-	Node* temp = list->start;
-	while (temp != nullptr) 
+	if (list == nullptr)
 	{
+		return;
+	}
+	Node* temp = list->start;
+	while (temp != nullptr) {
 		Node* ttemp = temp;
 		temp = temp->next;
 		delete ttemp;

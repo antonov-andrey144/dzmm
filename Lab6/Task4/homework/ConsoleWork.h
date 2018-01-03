@@ -5,8 +5,19 @@
 #include "List.h"
 #include "ListMergeSort.h"
 
-void startWork(List* &list);
+/**
+*	инициализация переменных
+*/
+List* startWork();
 
+/**
+*	выполнение алгоритма
+*/
 void doWork(List* &list);
 
+/**
+*	освобождение памяти из под переменных
+*/
 void endWork(List* &list);
+
+

@@ -1,8 +1,8 @@
 #include "ConsoleWork.h"
 
-void startWork(List* &list)
+List* startWork()
 {
-	list = listCreate();
+	return listCreate();
 }
 
 void doWork(List* &list)

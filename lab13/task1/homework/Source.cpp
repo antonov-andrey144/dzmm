@@ -4,33 +4,24 @@
 enum class Status
 {
 	start,
-	state1,
-	state2,
-	state3,
-	state4,
-	state5,
+	intPart,
+	dot,
+	fractPart,
+	exp,
+	sign,
+	pow,
 	success,
 	fail
 };
 
-bool isDigit(char chr)
-{
-	return (chr >= '0' && chr <= '9');
-}
-
-bool isExp(char chr)
-{
-	return (chr == 'e' || chr == 'E');
-}
-
 bool isSign(char chr)
 {
-	return (chr == '+' || chr == '-');
+	return chr == '+' || chr == '-';
 }
 
 bool isEndOfLine(char chr)
 {
-	return (chr == '\0');
+	return chr == '\0';
 }
 
 
@@ -38,6 +29,7 @@ int main()
 {
 	Status status = Status::start;
 	char str[200];
+	printf("digit+ (. digit+)? (E(+ | -)? digit+)?\n");
 	scanf("%s", str);
 
 	int i = 0;
@@ -47,28 +39,28 @@ int main()
 		{
 		case Status::start: //начало
 		{
-			if (!isDigit(str[i]))
+			if (!isdigit(str[i]))
 			{
 				status = Status::fail;
 			}
 			else
 			{
-				status = Status::state1;
+				status = Status::intPart;
 			}
 		}
-			break;
-		case Status::state1: //до запятой
+		break;
+		case Status::intPart: //до запятой
 		{
-			if (!isDigit(str[i]))
+			if (!isdigit(str[i]))
 			{
 				switch (str[i])
 				{
 				case '.':
-					status = Status::state2;
+					status = Status::dot;
 					break;
 				case 'e':
 				case 'E':
-					status = Status::state4;
+					status = Status::exp;
 					break;
 				case '\0':
 					status = Status::success;
@@ -79,28 +71,28 @@ int main()
 				}
 			}
 		}
-			break;
-		case Status::state2: //символ после запятой
+		break;
+		case Status::dot: //символ после запятой
 		{
-			if (isDigit(str[i]))
+			if (isdigit(str[i]))
 			{
-				status = Status::state3;
+				status = Status::fractPart;
 			}
 			else
 			{
 				status = Status::fail;
 			}
 		}
-			break;
-		case Status::state3: //после запятой
+		break;
+		case Status::fractPart: //после запятой
 		{
-			if (!isDigit(str[i]))
+			if (!isdigit(str[i]))
 			{
 				switch (str[i])
 				{
 				case 'e':
 				case 'E':
-					status = Status::state4;
+					status = Status::exp;
 					break;
 				case '\0':
 					status = Status::success;
@@ -111,22 +103,34 @@ int main()
 				}
 			}
 		}
-			break;
-		case Status::state4: //знак после E
+		break;
+		case Status::exp: //знак после E
 		{
-			if (isSign(str[i]) || isDigit(str[i]))
+			if (isSign(str[i]) || isdigit(str[i]))
 			{
-				status = Status::state5;
+				status = isSign(str[i]) ? Status::sign : Status::pow;
 			}
 			else
 			{
 				status = Status::fail;
 			}
 		}
-			break;
-		case Status::state5: //степень
+		break;
+		case Status::sign:
 		{
-			if (!isDigit(str[i]))
+			if (isdigit(str[i]))
+			{
+				status = Status::pow;
+			}
+			else
+			{
+				status = Status::fail;
+			}
+		}
+		break;
+		case Status::pow: //степень
+		{
+			if (!isdigit(str[i]))
 			{
 				if (isEndOfLine(str[i]))
 				{
@@ -138,9 +142,9 @@ int main()
 				}
 			}
 		}
-			break;
+		break;
 		}
-		
+
 		++i;
 	}
 

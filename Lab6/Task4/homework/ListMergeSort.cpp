@@ -37,25 +37,21 @@ List* mergeSortedLists(List* list1, List* list2, int sortBy, bool asc)
 	return result;
 }
 
-void listMergeSort(List* &list, int sortBy, bool asc) 
-{
-	int length = list->length;
+void listMergeSort(List* &list, int sortBy, bool asc) {
+	int length = listLength(list);
 	List** merging = new List*[length];
-	for (int i = 0; i < length; ++i) 
-	{
+	for (int i = 0; i < length; ++i) {
 		merging[i] = listCreate(listExtractFirst(list));
 	}
 	listDelete(list);
 
-	while (length != 1) 
-	{
+	while (length != 1) {
 		for (int i = 0; i < length; i += 2)
 		{
 			List* list1 = merging[i];
 			merging[i] = nullptr;
 			List* list2 = nullptr;
-			if (i + 1 < length) 
-			{
+			if (i + 1 < length) {
 				list2 = merging[i + 1];
 				merging[i + 1] = nullptr;
 			}
@@ -66,8 +62,7 @@ void listMergeSort(List* &list, int sortBy, bool asc)
 
 	List* result = merging[0];
 	merging[0] = nullptr;
-	for (int i = 0; i < length; ++i) 
-	{
+	for (int i = 0; i < length; ++i) {
 		listDelete(merging[i]);
 	}
 	delete[] merging;
