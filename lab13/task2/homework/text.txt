@@ -1,0 +1,7 @@
+/*comment1*/
+asdfa
+asdfas
+adsfasdf
+/*
+comment2
+comment3*/asdf
