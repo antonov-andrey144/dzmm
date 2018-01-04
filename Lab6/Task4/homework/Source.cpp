@@ -10,6 +10,7 @@ int main()
 
 	endWork(list);
 
-	system("pause");
+	int pause = 0;
+	scanf("%d", &pause);
 	return 0;
 }
