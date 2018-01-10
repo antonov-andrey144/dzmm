@@ -12,30 +12,26 @@ int substring(char* src, char* sub)
 		for (int j = i + 1; j < subLen - 1; ++j)
 		{
 			if (sub[i] == sub[j])
-			{
 				shift[i] = j;
-			}
 		}
 	}
 
 	for (int i = 0, j = 0; i <= srcLen - subLen && j >= 0; i += shift[j] + 1) 
 	{
-		for (j = subLen - 1; j >= 0 && sub[j] == src[i + j]; --j);
+		for (j = subLen - 1; j >= 0 && sub[j] == src[i + j]; j--);
+		if (j < 0)
 		{
-			if (j < 0)
-			{
-				return i;
-			}
+			return i;
 		}
 	}
-
 	return -1;
 }
 
 int main()
 {
-	char str[200], sub[10];
-	
+	char str[200] = "";
+	char sub[10] = "";
+
 	FILE* file = fopen("input.txt", "r");
 	fscanf(file, "%s", str);
 	fclose(file);
@@ -44,8 +40,8 @@ int main()
 	scanf("%s", sub);
 
 	printf("first index of substring occurance : %d\n", substring(str, sub));
+
 	int pause = 0;
-	printf("\n");
-	scanf("%d", &pause);
+	scanf("%d", pause);
 	return 0;
 }
