@@ -1,6 +1,8 @@
 #include "SplayTree.h"
+#include <iostream>
 #include <string>
 
+// элемент дерева
 struct SplayNode
 {
 	int key;
@@ -10,154 +12,267 @@ struct SplayNode
 	SplayNode *parent;
 };
 
+//корень дерева
 struct SplayTree
 {
 	SplayNode *root;
 };
 
+//создание дерева
 SplayTree* splayTreeCreate()
 {
 	return new SplayTree{ nullptr };
 }
 
+bool isLeftSon(SplayNode* node)
+{
+	return (node != nullptr && node->parent != nullptr && node->parent->left == node);
+}
+
+bool isRightSon(SplayNode* node)
+{
+	return (node != nullptr && node->parent != nullptr && node->parent->right == node);
+}
+
+//проверка на возможность зигануть
+bool canZig(SplayTree* tree, SplayNode* node)
+{
+	return tree != nullptr && node != nullptr && tree->root != nullptr  && node->parent == tree->root;
+}
+
+//проверрка имеет ли деда
+bool hasGrandParent(SplayTree* tree, SplayNode* node)
+{
+	return tree != nullptr && node != nullptr && tree->root != nullptr && node->parent != nullptr && node->parent->parent != nullptr;
+}
+
+// перемещение ноды в корень
+void assignRoot(SplayTree* tree, SplayNode* node)
+{
+	tree->root = node;
+	node->parent = nullptr;
+}
+
+// делает левым сыном
+SplayNode* assignLeftSon(SplayNode* parent, SplayNode* son)
+{
+	parent->left = son;
+	if (son != nullptr)
+	{
+		son->parent = parent;
+	}
+	return son;
+}
+
+// делает правым сыном
+SplayNode* assignRightSon(SplayNode* parent, SplayNode* son)
+{
+	parent->right = son;
+	if (son != nullptr)
+	{
+		son->parent = parent;
+	}
+	return son;
+}
+
+// зигует с помощью ранее написаных функций
+bool zig(SplayTree* tree, SplayNode* node)
+{
+	if (canZig(tree, node))
+	{
+		if (isLeftSon(node))
+		{
+			assignLeftSon(tree->root, node->right);
+
+			assignRightSon(node, tree->root);
+
+			assignRoot(tree, node);
+
+			return true;
+		}
+		else if (isRightSon(node))
+		{
+			assignRightSon(tree->root, node->left);
+
+			assignLeftSon(node, tree->root);
+
+			assignRoot(tree, node);
+
+			return true;
+		}
+	}
+	return false;
+}
+
+//переводит ноду в место её деда
+void nodeToGrandParent(SplayTree* tree, SplayNode* node)
+{
+	if (!hasGrandParent(tree, node))
+	{
+		return;
+	}
+	SplayNode* grandParent = node->parent->parent;
+	if (grandParent == tree->root)
+	{
+		assignRoot(tree, node);
+	}
+	else if (isLeftSon(grandParent))
+	{
+		assignLeftSon(grandParent->parent, node);
+	}
+	else if (isRightSon(grandParent))
+	{
+		assignRightSon(grandParent->parent, node);
+	}
+}
+
+// выполняется с помощью ранее написаных функций
+bool zigzig(SplayTree* tree, SplayNode* node)
+{
+	if (hasGrandParent(tree, node))
+	{
+		SplayNode* parent = node->parent; // запоминаем отца и деда
+		SplayNode* grandParent = parent->parent;
+		if (isLeftSon(node) && isLeftSon(parent))
+		{
+			nodeToGrandParent(tree, node); // перемещаем ноду в место деда
+
+			assignLeftSon(grandParent, parent->right); // делаем 
+			assignRightSon(parent, grandParent);
+			assignLeftSon(parent, node->right);
+			assignRightSon(node, parent);
+
+			return true;
+		}
+		else if (isRightSon(node) && isRightSon(parent))
+		{
+			nodeToGrandParent(tree, node);
+
+			assignRightSon(grandParent, parent->left);
+			assignLeftSon(parent, grandParent);
+			assignRightSon(parent, node->left);
+			assignLeftSon(node, parent);
+
+			return true;
+		}
+	}
+	return false;
+}
+
+bool zigzag(SplayTree* tree, SplayNode* node)
+{
+	if (hasGrandParent(tree, node))
+	{
+		SplayNode* parent = node->parent;
+		SplayNode* grandParent = parent->parent;
+		if (isRightSon(node) && isLeftSon(parent))
+		{
+			nodeToGrandParent(tree, node);
+
+			assignLeftSon(grandParent, node->right);
+			assignRightSon(parent, node->left);
+			assignRightSon(node, grandParent);
+			assignLeftSon(node, parent);
+
+			return true;
+		}
+		else if (isLeftSon(node) && isRightSon(parent))
+		{
+			nodeToGrandParent(tree, node);
+
+			assignRightSon(grandParent, node->left);
+			assignLeftSon(parent, node->right);
+			assignLeftSon(grandParent, node->right);
+			assignRightSon(grandParent, parent);
+
+			return true;
+		}
+	}
+	return false;
+}
+
+void splay(SplayTree* tree, SplayNode* node)
+{
+	while (zigzig(tree, node) || zigzag(tree, node));
+	zig(tree, node);
+}
+
 SplayNode* findParent(SplayNode* root, int key)
 {
-	if (root->key > key && root->left != nullptr) 
+	if (root->key > key && root->left != nullptr)
 	{
 		return findParent(root->left, key);
 	}
-	else if (root->key < key && root->right != nullptr) 
+	else if (root->key < key && root->right != nullptr)
 	{
 		return findParent(root->right, key);
 	}
 	return root;
 }
 
-void zig(SplayTree* tree, SplayNode* node)
+SplayNode* newSplayNode(int key, Element element)
 {
-	node->parent->left = node->right;
-	if (node->right != nullptr) 
-	{
-		node->right->parent = node->parent;
-	}
-	node->right = node->parent;
-	node->parent = node->parent->parent;
-	node->right->parent = node;
-	if (node->parent == nullptr) 
-	{
-		tree->root = node;
-	}
+	Element copy = new char[40];
+	strcpy_s(copy, 40, element);
+	return new SplayNode{ key, copy, nullptr, nullptr, nullptr };
 }
 
-void zag(SplayTree* tree, SplayNode* node)
+SplayNode* splayNodeAdd(SplayNode* node, int key, Element element)
 {
-	node->parent->right = node->left;
-	if (node->left != nullptr) 
+	if (node->key == key)
 	{
-		node->left->parent = node->parent;
+		strcpy_s(node->value, 40, element);
 	}
-	node->left = node->parent;
-	node->parent = node->parent->parent;
-	node->left->parent = node;
-	if (node->parent == nullptr) 
+	else if (node->key < key)
 	{
-		tree->root = node;
+		if (node->left != nullptr)
+		{
+			return splayNodeAdd(node->left, key, element);
+		}
+		return assignLeftSon(node, newSplayNode(key, element));
 	}
-}
-
-void splay(SplayTree* tree, SplayNode* node)
-{
-	if (node->parent != nullptr) 
+	else if (node->key > key)
 	{
-		if (node == node->parent->left) 
+		if (node->right != nullptr)
 		{
-			if (node->parent->parent == nullptr) 
-			{
-				zig(tree, node);
-			}
-			else if (node->parent == node->parent->parent->left) 
-			{
-				zig(tree, node->parent);
-				zig(tree, node);
-			}
-			else 
-			{
-				zig(tree, node);
-				zag(tree, node);
-			}
+			return splayNodeAdd(node->right, key, element);
 		}
-		else 
-		{
-			if (node->parent->parent == nullptr) 
-			{
-				zag(tree, node);
-			}
-			else if (node->parent == node->parent->parent->right) 
-			{
-				zag(tree, node->parent);
-				zag(tree, node);
-			}
-			else 
-			{
-				zag(tree, node);
-				zig(tree, node);
-			}
-		}
-		splay(tree, node);
+		return assignRightSon(node, newSplayNode(key, element));
 	}
 }
 
 void splayTreeAdd(SplayTree * tree, int key, Element element)
 {
-	Element copy = new char[40];
-	strcpy_s(copy, 40, element);
-	if (tree->root == nullptr) 
+	if (tree->root == nullptr)
 	{
-		tree->root = new SplayNode{ key, copy, nullptr, nullptr, nullptr };
+		assignRoot(tree, newSplayNode(key, element));
 	}
-	else 
+	else
 	{
-		SplayNode *parent = findParent(tree->root, key);
-		if (parent->key > key) 
-		{
-			SplayNode *newNode = new SplayNode{ key, copy, nullptr, nullptr, parent };
-			parent->left = newNode;
-			splay(tree, newNode);
-		}
-		else if (parent->key == key) 
-		{
-			parent->value = copy;
-			splay(tree, parent);
-		}
-		else 
-		{
-			SplayNode *newNode = new SplayNode{ key, copy, nullptr, nullptr, parent };
-			parent->right = newNode;
-			splay(tree, newNode);
-		}
+		splay(tree, splayNodeAdd(tree->root, key, element));
 	}
 }
 
-SplayNode* find(SplayNode* root, int key)
+SplayNode* find(SplayNode* node, int key)
 {
-	if (root == nullptr || root->key == key) 
+	if (node == nullptr || node->key == key)
 	{
-		return root;
+		return node;
 	}
-	else if (root->key > key) 
+	else if (node->key < key)
 	{
-		return find(root->left, key);
+		return find(node->left, key);
 	}
-	else 
+	else if (node->key > key)
 	{
-		return find(root->right, key);
+		return find(node->right, key);
 	}
 }
 
 bool splayTreeContains(SplayTree* tree, int key)
 {
 	SplayNode* node = find(tree->root, key);
-	if (node != nullptr) 
+	if (node != nullptr)
 	{
 		splay(tree, node);
 		return true;
@@ -168,88 +283,74 @@ bool splayTreeContains(SplayTree* tree, int key)
 char* splayTreeGetByKey(SplayTree * tree, int key)
 {
 	SplayNode* temp = find(tree->root, key);
-	if (temp == nullptr) 
+	if (temp == nullptr)
 	{
 		return "";
 	}
-	else 
+	else
 	{
 		return temp->value;
 	}
 }
 
-void swap(int& a, int& b)
-{
-	int c = a;
-	a = b;
-	b = c;
-}
-
-void swap(char*& a, char*& b)
-{
-	char* c = a;
-	a = b;
-	b = c;
-}
-
 void splayTreeDeleteByKey(SplayTree * tree, int key)
 {
 	SplayNode *node = find(tree->root, key);
-	if (node == nullptr) 
+	if (node == nullptr)
 	{
 		return;
 	}
-	if (node->left != nullptr && node->right != nullptr) 
+	if (node->left != nullptr && node->right != nullptr)
 	{
 		SplayNode* temp = node->left;
-		while (temp->right != nullptr) 
+		while (temp->right != nullptr)
 		{
 			temp = temp->right;
 		}
-		swap(temp->key, node->key);
-		swap(temp->value, node->value);
-		if (temp->parent->right == temp) 
+		std::swap(temp->key, node->key);
+		std::swap(temp->value, node->value);
+		if (temp->parent->right == temp)
 		{
-			if (temp->left != nullptr) 
+			if (temp->left != nullptr)
 			{
 				temp->parent->right = temp->left;
 			}
-			else 
+			else
 			{
 				temp->parent->right = nullptr;
 			}
 		}
-		else 
+		else
 		{
-			if (temp->left != nullptr) 
+			if (temp->left != nullptr)
 			{
 				temp->parent->left = temp->left;
 			}
-			else 
+			else
 			{
 				temp->parent->left = nullptr;
 			}
 		}
 		delete temp;
-		if (node->parent != nullptr) 
+		if (node->parent != nullptr)
 		{
 			splay(tree, node->parent);
 		}
 	}
-	else if (node->left != nullptr) 
+	else if (node->left != nullptr)
 	{
-		if (node->parent == nullptr) 
+		if (node->parent == nullptr)
 		{
 			tree->root = node->left;
 			tree->root->parent = nullptr;
 		}
-		else 
+		else
 		{
-			if (node->parent->left == node) 
+			if (node->parent->left == node)
 			{
 				node->parent->left = node->left;
 			}
-			else 
+			else
 			{
 				node->parent->right = node->left;
 			}
@@ -258,20 +359,20 @@ void splayTreeDeleteByKey(SplayTree * tree, int key)
 		}
 		delete node;
 	}
-	else if (node->right != nullptr) 
+	else if (node->right != nullptr)
 	{
-		if (node->parent == nullptr) 
+		if (node->parent == nullptr)
 		{
 			tree->root = node->right;
 			tree->root->parent = nullptr;
 		}
-		else 
+		else
 		{
-			if (node->parent->left == node) 
+			if (node->parent->left == node)
 			{
 				node->parent->left = node->right;
 			}
-			else 
+			else
 			{
 				node->parent->right = node->right;
 			}
@@ -280,21 +381,21 @@ void splayTreeDeleteByKey(SplayTree * tree, int key)
 		}
 		delete node;
 	}
-	else 
+	else
 	{
-		if (node->parent != nullptr) 
+		if (node->parent != nullptr)
 		{
-			if (node->parent->left == node) 
+			if (node->parent->left == node)
 			{
 				node->parent->left = nullptr;
 			}
-			else 
+			else
 			{
 				node->parent->right = nullptr;
 			}
 			splay(tree, node->parent);
 		}
-		else 
+		else
 		{
 			tree->root = nullptr;
 		}
@@ -302,13 +403,13 @@ void splayTreeDeleteByKey(SplayTree * tree, int key)
 	}
 }
 
-void deleteSubTree(SplayNode* root) 
+void deleteSubTree(SplayNode* root)
 {
-	if (root->left != nullptr) 
+	if (root->left != nullptr)
 	{
 		deleteSubTree(root->left);
 	}
-	if (root->right != nullptr) 
+	if (root->right != nullptr)
 	{
 		deleteSubTree(root->right);
 	}
@@ -317,7 +418,7 @@ void deleteSubTree(SplayNode* root)
 
 void splayTreeDelete(SplayTree* &tree)
 {
-	if (tree->root != nullptr) 
+	if (tree->root != nullptr)
 	{
 		deleteSubTree(tree->root);
 	}

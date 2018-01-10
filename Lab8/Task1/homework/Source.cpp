@@ -37,7 +37,7 @@ int main()
 		{
 			printf("Input key ");
 			scanf("%d", &key);
-			printf("Found : \"%s\"", splayTreeGetByKey(tree, key));
+			printf("Found : \"%s\"\n", splayTreeGetByKey(tree, key));
 		}
 		break;
 		case 3:
@@ -65,7 +65,7 @@ int main()
 	} while (choice != 0);
 
 	splayTreeDelete(tree);
-	char* pause = new char[500];
+	char *pause = new char[500];
 	gets_s(pause, 500);
 	delete[] pause;
 	return 0;
