@@ -7,7 +7,10 @@ int** initMatrix(int rows, int cols)
 	for (int i = 0; i < rows; ++i)
 	{
 		matr[i] = new int[cols] {0};
-		for (int j = 0; j < cols; ++j) matr[i][j] = -1;
+		for (int j = 0; j < cols; j++)
+		{
+			matr[i][j] = -1;
+		}
 	}
 	return matr;
 }
@@ -38,7 +41,7 @@ void printMatrix(int** matr, int rows, int cols)
 		printf("_____", i);
 	}
 	printf("\n");
-	
+
 }
 
 void deleteMatrix(int** matr, int rows, int cols)
@@ -77,11 +80,14 @@ int findClosestFromTown(int** roads, int townsCount, int from)
 
 bool hasRoads(int** roads, int townsCount)
 {
-	for (int i = 0; i < townsCount*townsCount; ++i)
+	for (int i = 0; i < townsCount; ++i)
 	{
-		if (roads[i / townsCount][i % townsCount] != -1)
+		for (int j = 0; j < townsCount; ++j)
 		{
-			return true;
+			if (roads[i][j] != -1)
+			{
+				return true;
+			}
 		}
 	}
 	return false;
@@ -90,7 +96,8 @@ bool hasRoads(int** roads, int townsCount)
 void addClosestToCountry(int** roads, int** countries, int townsCount, int countriesCount, int country)
 {
 	//ищем ближайший незанятый город
-	int closestTown = -1, minDistance = -1;
+	int closestTown = -1;
+	int minDistance = -1;
 	for (int i = 0; i < townsCount + 1 && countries[country][i] != -1; ++i)
 	{
 		int tempClosestTown = findClosestFromTown(roads, townsCount, countries[country][i]);
@@ -121,15 +128,18 @@ int main()
 	//начинаем считывание файла
 	FILE* fileIn = fopen("input.txt", "r");
 
-	int townsCount = 0, roadsCount = 0;
+	int townsCount = 0;
+	int roadsCount = 0;
 	fscanf(fileIn, "%d", &townsCount);
 	fscanf(fileIn, "%d", &roadsCount);
 	int** roads = initMatrix(townsCount, townsCount);
 	for (int i = 0; i < roadsCount; ++i)
 	{
-		int p = 0, t = 0, len = 0;
-		fscanf(fileIn, "%d %d %d", &p, &t, &len);
-		roads[p][t] = len;
+		int from = 0;
+		int to = 0;
+		int roadLength = 0;
+		fscanf(fileIn, "%d %d %d", &from, &to, &roadLength);
+		roads[from][to] = roadLength;
 	}
 
 	int countriesCount = 0;
@@ -153,7 +163,7 @@ int main()
 	}
 
 	//выводим список стран
-	for (int i = 0; i < countriesCount; ++i) 
+	for (int i = 0; i < countriesCount; ++i)
 	{
 		printf("%d -> ", countries[i][0]);
 		for (int j = 1; j < townsCount + 1 && countries[i][j] != -1; ++j)
@@ -167,7 +177,6 @@ int main()
 	deleteMatrix(roads, townsCount, townsCount);
 	deleteMatrix(countries, countriesCount, townsCount + 1);
 
-	int pause = 0;
-	scanf("%d", &pause);
+
 	return 0;
 }
