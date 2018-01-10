@@ -85,7 +85,7 @@ int main()
 		{
 			for (int j = 0; j < dim; ++j)
 			{
-				if ((visited[i] == 1) && (table[i][j] != -1) && (tmpMin == -1 || table[i][j] < tmpMin))
+				if ((visited[i]) && (table[i][j] != -1) && (tmpMin == -1 || table[i][j] < tmpMin))
 				{
 					tmpMin = table[i][j];
 					minI = i;
