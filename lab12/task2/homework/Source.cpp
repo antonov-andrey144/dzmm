@@ -93,12 +93,12 @@ int main()
 				}
 			}
 		}
-		if (visited[minJ] == 0)
+		if (!visited[minJ])
 		{
 			path[visitedCount] = minJ;
 			++visitedCount;
 			minCost += tmpMin;
-			visited[minJ] = 1;
+			visited[minJ] = true;
 			printf("%d->%d [%d]\n", minI, minJ, tmpMin);
 		}
 		table[minI][minJ] = table[minJ][minI] = -1;
