@@ -7,7 +7,7 @@ int** initMatrix(int rows, int cols)
 	for (int i = 0; i < rows; ++i)
 	{
 		matr[i] = new int[cols] {0};
-		for (int j = 0; j < cols; j++)
+		for (int j = 0; j < cols; ++j)
 		{
 			matr[i][j] = -1;
 		}
@@ -177,6 +177,7 @@ int main()
 	deleteMatrix(roads, townsCount, townsCount);
 	deleteMatrix(countries, countriesCount, townsCount + 1);
 
-
+	int pause = 0;
+	scanf("%d", &pause);
 	return 0;
 }
