@@ -102,7 +102,7 @@ void addClosestToCountry(int** roads, int** countries, int townsCount, int count
 	{
 		int tempClosestTown = findClosestFromTown(roads, townsCount, countries[country][i]);
 
-		if (tempClosestTown != -1 && (minDistance == -1 || minDistance != -1 && roads[i][tempClosestTown] < minDistance))
+		if (tempClosestTown != -1 && (minDistance == -1 || roads[i][tempClosestTown] < minDistance))
 		{
 			closestTown = tempClosestTown;
 			minDistance = roads[i][tempClosestTown];
@@ -140,6 +140,7 @@ int main()
 		int roadLength = 0;
 		fscanf(fileIn, "%d %d %d", &from, &to, &roadLength);
 		roads[from][to] = roadLength;
+		roads[to][from] = roadLength;
 	}
 
 	int countriesCount = 0;
