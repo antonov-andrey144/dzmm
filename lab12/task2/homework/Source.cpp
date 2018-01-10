@@ -68,11 +68,15 @@ int main()
 	int dim = 0;
 	int** table = nullptr;
 	initTable("matr.txt", table, dim);
-	int* visited = new int[dim] {0};
-	int* path = new int[dim*dim]{ 0 }; //города, через которые проходит остовное дерево
+	bool* visited = new bool[dim] { 0 };
+	int* path = new int[dim * dim]{ 0 }; //города, через которые проходит остовное дерево
 	printTable(table, dim);
-	int minI = 0, minJ = 0, minCost = 0, tmpMin = 0, visitedCount = 1;
-	visited[0] = 1;
+	int minI = 0;
+	int minJ = 0;
+	int minCost = 0;
+	int tmpMin = 0;
+	int visitedCount = 1;
+	visited[0] = true;
 
 	while (visitedCount < dim) 
 	{
@@ -105,8 +109,7 @@ int main()
 	delete[] visited;
 	deleteTable(table, dim);
 
-	char *pause = new char[500];
-	gets_s(pause, 500);
-	delete[] pause;
+	int pause = 0;
+	scanf("%d", &pause);
 	return 0;
 }
