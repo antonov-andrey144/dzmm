@@ -19,7 +19,8 @@ int main()
 	int choice = 0;
 	int key = 0;
 	Element element = new char[40];
-	do {
+	do 
+	{
 		printMenu();
 		scanf("%d", &choice);
 		switch (choice)

@@ -12,13 +12,13 @@ struct SplayNode
 	SplayNode *parent;
 };
 
-//корень дерева
+// корень дерева
 struct SplayTree
 {
 	SplayNode *root;
 };
 
-//создание дерева
+// создание дерева
 SplayTree* splayTreeCreate()
 {
 	return new SplayTree{ nullptr };
@@ -34,13 +34,13 @@ bool isRightSon(SplayNode* node)
 	return (node != nullptr && node->parent != nullptr && node->parent->right == node);
 }
 
-//проверка на возможность зигануть
+// проверка на возможность зигануть
 bool canZig(SplayTree* tree, SplayNode* node)
 {
 	return tree != nullptr && node != nullptr && tree->root != nullptr  && node->parent == tree->root;
 }
 
-//проверрка имеет ли деда
+// проверрка имеет ли деда
 bool hasGrandParent(SplayTree* tree, SplayNode* node)
 {
 	return tree != nullptr && node != nullptr && tree->root != nullptr && node->parent != nullptr && node->parent->parent != nullptr;
@@ -104,7 +104,7 @@ bool zig(SplayTree* tree, SplayNode* node)
 	return false;
 }
 
-//переводит ноду в место её деда
+// переводит ноду в место её деда
 void nodeToGrandParent(SplayTree* tree, SplayNode* node)
 {
 	if (!hasGrandParent(tree, node))
@@ -137,7 +137,7 @@ bool zigzig(SplayTree* tree, SplayNode* node)
 		{
 			nodeToGrandParent(tree, node); // перемещаем ноду в место деда
 
-			assignLeftSon(grandParent, parent->right); // делаем 
+			assignLeftSon(grandParent, parent->right);
 			assignRightSon(parent, grandParent);
 			assignLeftSon(parent, node->right);
 			assignRightSon(node, parent);
@@ -210,6 +210,7 @@ SplayNode* findParent(SplayNode* root, int key)
 	return root;
 }
 
+// создание новой ноды
 SplayNode* newSplayNode(int key, Element element)
 {
 	Element copy = new char[40];
@@ -217,6 +218,7 @@ SplayNode* newSplayNode(int key, Element element)
 	return new SplayNode{ key, copy, nullptr, nullptr, nullptr };
 }
 
+// добавление ноды в дерево
 SplayNode* splayNodeAdd(SplayNode* node, int key, Element element)
 {
 	if (node->key == key)
@@ -241,6 +243,7 @@ SplayNode* splayNodeAdd(SplayNode* node, int key, Element element)
 	}
 }
 
+
 void splayTreeAdd(SplayTree * tree, int key, Element element)
 {
 	if (tree->root == nullptr)
@@ -253,6 +256,7 @@ void splayTreeAdd(SplayTree * tree, int key, Element element)
 	}
 }
 
+// поиск ноды
 SplayNode* find(SplayNode* node, int key)
 {
 	if (node == nullptr || node->key == key)
@@ -269,6 +273,7 @@ SplayNode* find(SplayNode* node, int key)
 	}
 }
 
+// 
 bool splayTreeContains(SplayTree* tree, int key)
 {
 	SplayNode* node = find(tree->root, key);
