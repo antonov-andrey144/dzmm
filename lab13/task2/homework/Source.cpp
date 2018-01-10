@@ -47,8 +47,7 @@ int main()
 	int cols = 0;
 	initTable("states.txt", states, rows, cols);
 
-
-	char* str = new char[256];
+	char str[256] = "";
 	int i = 0;
 	int state = 0;
 
@@ -70,17 +69,13 @@ int main()
 			state = states[state][getState(str[i])];
 			++i;
 		}
-		if (state == 2)
-		{
-			printf("\n");
-		}
+		if (state == 2) printf("\n");
 	}
 	fclose(file);
 
 	deleteTable(states, rows, cols);
-	char *pause = new char[500];
+	int pause = 0;
 	printf("\n");
-	gets_s(pause, 500);
-	delete[] pause;
+	scanf("%d", &pause);
 	return 0;
 }
