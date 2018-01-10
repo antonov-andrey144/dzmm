@@ -28,7 +28,8 @@ int fibNonRec(int n)
 	return second;
 }
 
-int main(){
+int main()
+{
 	setlocale(LC_ALL, "Russian");
 	int n = 0;
 	printf("Введите номер числа фибоначчи\n");
