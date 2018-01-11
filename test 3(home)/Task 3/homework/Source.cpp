@@ -19,15 +19,7 @@ enum class Status
 
 bool isRightAlpha(char alpha)
 {
-	if (alpha == 'B' || alpha == 'M' || alpha == 'S' || alpha == 'm')
-
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return(alpha == 'B' || alpha == 'M' || alpha == 'S');
 }
 
 int main()
@@ -37,7 +29,7 @@ int main()
 	scanf("%s", &str);
 	int i = 0;
 	Status state = Status::start;
-	while (str[i] != '\0' && state !=Status::comlite)
+	while (str[i] != '\0' && state !=Status::comlite && state !=Status::fail)
 	{
 		switch (state)
 		{
@@ -73,10 +65,10 @@ int main()
 		{
 			if (isdigit(str[i]))
 			{
-				if (str[i] >='1')
+				if (str[i] >= '1')
 				{
 					state = Status::groop;
-					i++;
+					++i;
 				}
 				else 
 				{
@@ -87,14 +79,14 @@ int main()
 			else
 			{
 				state = Status::fail;
-				i++;
+				++i;
 			}
 			break;
 		}
 
 		case Status::groop:
 		{
-			if (str[i] == '0')
+			if (str[i] == '0' && str[i - 1] == '1')
 			{
 				state = Status::groopWas;
 				++i;
