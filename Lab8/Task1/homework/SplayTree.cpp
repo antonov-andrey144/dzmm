@@ -51,10 +51,13 @@ bool hasGrandParent(SplayTree* tree, SplayNode* node)
 void assignRoot(SplayTree* tree, SplayNode* node)
 {
 	tree->root = node;
-	node->parent = nullptr;
+	if (node != nullptr)
+	{
+		node->parent = nullptr;
+	}
 }
 
-// делает левым сыном
+// делает левым сыном, возвращает указатель на сына (используется при добавлении)
 SplayNode* assignLeftSon(SplayNode* parent, SplayNode* son)
 {
 	parent->left = son;
@@ -76,7 +79,7 @@ SplayNode* assignRightSon(SplayNode* parent, SplayNode* son)
 	return son;
 }
 
-// зигует с помощью ранее написаных функций
+// вращает влево или вправо
 bool zig(SplayTree* tree, SplayNode* node)
 {
 	if (canZig(tree, node))
@@ -105,7 +108,7 @@ bool zig(SplayTree* tree, SplayNode* node)
 	return false;
 }
 
-// переводит ноду в место её деда
+// ставит ноду на место ее деда
 void nodeToGrandParent(SplayTree* tree, SplayNode* node)
 {
 	if (!hasGrandParent(tree, node))
@@ -127,7 +130,7 @@ void nodeToGrandParent(SplayTree* tree, SplayNode* node)
 	}
 }
 
-// выполняется с помощью ранее написаных функций
+// делает двойное вращение в одну сторону
 bool zigzig(SplayTree* tree, SplayNode* node)
 {
 	if (hasGrandParent(tree, node))
@@ -198,19 +201,6 @@ void splay(SplayTree* tree, SplayNode* node)
 	zig(tree, node);
 }
 
-SplayNode* findParent(SplayNode* root, int key)
-{
-	if (root->key > key && root->left != nullptr)
-	{
-		return findParent(root->left, key);
-	}
-	else if (root->key < key && root->right != nullptr)
-	{
-		return findParent(root->right, key);
-	}
-	return root;
-}
-
 // создание новой ноды
 SplayNode* newSplayNode(int key, Element element)
 {
@@ -245,8 +235,12 @@ SplayNode* splayNodeAdd(SplayNode* node, int key, Element element)
 }
 
 
-void splayTreeAdd(SplayTree * tree, int key, Element element)
+void splayTreeAdd(SplayTree* &tree, int key, Element element)
 {
+	if (tree == nullptr)
+	{
+		tree = splayTreeCreate();
+	}
 	if (tree->root == nullptr)
 	{
 		assignRoot(tree, newSplayNode(key, element));
@@ -257,7 +251,7 @@ void splayTreeAdd(SplayTree * tree, int key, Element element)
 	}
 }
 
-// поиск ноды
+// поиск ноды по ключу
 SplayNode* find(SplayNode* node, int key)
 {
 	if (node == nullptr || node->key == key)
@@ -274,18 +268,19 @@ SplayNode* find(SplayNode* node, int key)
 	}
 }
 
-// 
+// проверка, есть ли данный ключ в дереве
 bool splayTreeContains(SplayTree* tree, int key)
 {
-	SplayNode* node = find(tree->root, key);
-	if (node != nullptr)
+	SplayNode* temp = find(tree->root, key);
+	if (temp != nullptr)
 	{
-		splay(tree, node);
+		splay(tree, temp);
 		return true;
 	}
 	return false;
 }
 
+//поиск значения по ключу
 char* splayTreeGetByKey(SplayTree * tree, int key)
 {
 	SplayNode* temp = find(tree->root, key);
@@ -295,118 +290,54 @@ char* splayTreeGetByKey(SplayTree * tree, int key)
 	}
 	else
 	{
+		splay(tree, temp);
 		return temp->value;
 	}
 }
 
-void splayTreeDeleteByKey(SplayTree * tree, int key)
+SplayNode* minNode(SplayNode *node) {
+	while (node->left)
+	{
+		node = node->left;
+	}
+	return node;
+}
+
+void deleteRoot(SplayTree * tree)
 {
-	SplayNode *node = find(tree->root, key);
-	if (node == nullptr)
+	SplayNode* root = tree->root;
+	if (root->left == nullptr)
 	{
-		return;
+		assignRoot(tree, root->right);
 	}
-	if (node->left != nullptr && node->right != nullptr)
+	else if (root->right == nullptr)
 	{
-		SplayNode* temp = node->left;
-		while (temp->right != nullptr)
-		{
-			temp = temp->right;
-		}
-		std::swap(temp->key, node->key);
-		std::swap(temp->value, node->value);
-		if (temp->parent->right == temp)
-		{
-			if (temp->left != nullptr)
-			{
-				temp->parent->right = temp->left;
-			}
-			else
-			{
-				temp->parent->right = nullptr;
-			}
-		}
-		else
-		{
-			if (temp->left != nullptr)
-			{
-				temp->parent->left = temp->left;
-			}
-			else
-			{
-				temp->parent->left = nullptr;
-			}
-		}
-		delete temp;
-		if (node->parent != nullptr)
-		{
-			splay(tree, node->parent);
-		}
-	}
-	else if (node->left != nullptr)
-	{
-		if (node->parent == nullptr)
-		{
-			tree->root = node->left;
-			tree->root->parent = nullptr;
-		}
-		else
-		{
-			if (node->parent->left == node)
-			{
-				node->parent->left = node->left;
-			}
-			else
-			{
-				node->parent->right = node->left;
-			}
-			node->left->parent = node->parent;
-			splay(tree, node->parent);
-		}
-		delete node;
-	}
-	else if (node->right != nullptr)
-	{
-		if (node->parent == nullptr)
-		{
-			tree->root = node->right;
-			tree->root->parent = nullptr;
-		}
-		else
-		{
-			if (node->parent->left == node)
-			{
-				node->parent->left = node->right;
-			}
-			else
-			{
-				node->parent->right = node->right;
-			}
-			node->right->parent = node->parent;
-			splay(tree, node->parent);
-		}
-		delete node;
+		assignRoot(tree, root->left);
 	}
 	else
 	{
-		if (node->parent != nullptr)
+		SplayNode* min = minNode(root->right);
+		if (min->parent != root)
 		{
-			if (node->parent->left == node)
-			{
-				node->parent->left = nullptr;
-			}
-			else
-			{
-				node->parent->right = nullptr;
-			}
-			splay(tree, node->parent);
+			assignLeftSon(min->parent, min->right);
+			assignRightSon(min, root->right);
 		}
-		else
-		{
-			tree->root = nullptr;
-		}
-		delete node;
+		assignLeftSon(min, root->left);
+		assignRoot(tree, min);
 	}
+	delete root;
+}
+
+void splayTreeDeleteByKey(SplayTree * tree, int key)
+{
+	SplayNode* temp = find(tree->root, key);
+	if (temp == nullptr)
+	{
+		return;
+	}
+	splay(tree, temp);
+
+	deleteRoot(tree);
 }
 
 void deleteSubTree(SplayNode* root)

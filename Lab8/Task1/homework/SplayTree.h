@@ -8,7 +8,7 @@ struct SplayTree;
 SplayTree* splayTreeCreate();
 
 //добавление элемента в дерево
-void splayTreeAdd(SplayTree* tree, int key, Element element);
+void splayTreeAdd(SplayTree* &tree, int key, Element element);
 
 //Нахождение элемента по ключу
 Element splayTreeGetByKey(SplayTree* tree, int key);
