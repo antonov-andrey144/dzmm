@@ -10,6 +10,7 @@ enum class Status
 	alphaWas,
 	digit2Was,
 	groop,
+	secondDigInGroop,
 	groopWas,
 	dWas,
 	mWas,
@@ -19,7 +20,7 @@ enum class Status
 
 bool isRightAlpha(char alpha)
 {
-	return(alpha == 'B' || alpha == 'M' || alpha == 'S');
+	return (alpha == 'B' || alpha == 'M' || alpha == 'S');
 }
 
 int main()
@@ -29,7 +30,7 @@ int main()
 	scanf("%s", &str);
 	int i = 0;
 	Status state = Status::start;
-	while (str[i] != '\0' && state !=Status::comlite && state !=Status::fail)
+	while (str[i] != '\0' && state != Status::comlite && state != Status::fail)
 	{
 		switch (state)
 		{
@@ -65,12 +66,17 @@ int main()
 		{
 			if (isdigit(str[i]))
 			{
-				if (str[i] >= '1')
+				if (str[i] >= '2')
 				{
-					state = Status::groop;
+					state = Status::groopWas;
 					++i;
 				}
-				else 
+				else if (str[i] == '1')
+				{
+					state = Status::secondDigInGroop;
+					++i;
+				}
+				else
 				{
 					state = Status::fail;
 				}
@@ -79,21 +85,21 @@ int main()
 			else
 			{
 				state = Status::fail;
-				++i;
 			}
 			break;
 		}
 
-		case Status::groop:
+		case Status::secondDigInGroop:
 		{
-			if (str[i] == '0' && str[i - 1] == '1')
+			if (str[i] == '0')
 			{
 				state = Status::groopWas;
 				++i;
 			}
 			else if (str[i] == '-')
 			{
-				state = Status::groopWas;
+				state = Status::dWas;
+				++i;
 			}
 			else
 			{
@@ -112,7 +118,7 @@ int main()
 			else
 			{
 				state = Status::fail;
-				i++;
+				++i;
 			}
 			break;
 		}
@@ -155,15 +161,10 @@ int main()
 				++i;
 			}
 
-			else 
+			else
 			{
 				state = Status::fail;
 			}
-			break;
-		}
-
-		case Status::fail:
-		{
 			break;
 		}
 
