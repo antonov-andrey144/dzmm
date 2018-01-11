@@ -2,8 +2,6 @@
 #include <iostream>
 #include <cstdlib>
 
-using namespace std;
-
 enum class Status
 {
 	start,
@@ -31,7 +29,8 @@ bool isRightAlpha(char alpha)
 	}
 }
 
-int main(int argc, char** argv) {
+int main()
+{
 	char str[100];
 	printf("Enter the string you want to check: ");
 	scanf("%s", &str);
@@ -129,7 +128,7 @@ int main(int argc, char** argv) {
 			if (str[i] == 'm')
 			{
 				state = Status::mWas;
-				i++;
+				++i;
 			}
 			else
 			{
