@@ -13,7 +13,8 @@ enum class Status
 	groopWas,
 	dWas,
 	mWas,
-	fail
+	fail,
+	comlite
 };
 
 bool isRightAlpha(char alpha)
@@ -36,7 +37,7 @@ int main()
 	scanf("%s", &str);
 	int i = 0;
 	Status state = Status::start;
-	while (str[i] != '\0')
+	while (str[i] != '\0' && state !=Status::comlite)
 	{
 		switch (state)
 		{
@@ -79,7 +80,7 @@ int main()
 				}
 				else 
 				{
-					state = Status::groopWas;
+					state = Status::fail;
 				}
 			}
 
@@ -114,6 +115,7 @@ int main()
 			if (str[i] == '-')
 			{
 				state = Status::dWas;
+				++i;
 			}
 			else
 			{
@@ -142,7 +144,7 @@ int main()
 		{
 			if (str[i] == 'm')
 			{
-				state = Status::mWas;
+				state = Status::comlite;
 				break;
 			}
 			else
@@ -175,18 +177,12 @@ int main()
 
 		default:
 		{
-			state = Status::fail;
 			break;
 		}
-		}
-
-		if (state == Status::fail)
-		{
-			break;
 		}
 	}
 
-	if (state == Status::mWas)
+	if (state == Status::comlite)
 	{
 		printf("String is right");
 	}
