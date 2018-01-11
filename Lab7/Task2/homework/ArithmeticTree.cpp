@@ -10,6 +10,9 @@ struct Node
 	Node* right;
 };
 
+/**
+keeping root of Arithmetic Tree
+*/
 struct ArithmeticTree
 {
 	Node* root;
@@ -38,13 +41,14 @@ Node* createOperationNode(char operation, Node* left, Node* right)
 }
 
 /**
-	offsetting pointer to required place
-	@param str pointer to offsetting
+	getting offset to second operand
+	@param str - source string
+	@param offset - start of first operand
 */
-char* offsetStr(char* str)
+int offsetStr(char* str, int offset)
 {
-	int parcount = str[0] == '(' ? 1 : 0;
-	int i = 1;
+	int parcount = str[offset] == '(' ? 1 : 0;
+	int i = offset + 1;
 	while (parcount != 0)
 	{
 		if (str[i] == '(')
@@ -61,27 +65,28 @@ char* offsetStr(char* str)
 	{
 		++i;
 	}
-	return str + i + 1;
+	return i + 1;
 }
 
 /**
 	creating Node
-	@param str - pointer to Node
+	@param str - source string
+	@param offset - start of node
 	@return pointer to Node
 */
-Node* createNode(char* str)
+Node* createNode(char* str, int offset = 0)
 {
 	Node* result = nullptr;
-	if (str[0] == '(')
+	if (str[offset] == '(')
 	{
-		result = createOperationNode(str[1], createNode(str + 3), createNode(offsetStr(str + 3)));
+		result = createOperationNode(str[offset + 1], createNode(str, offset + 3), createNode(str, offsetStr(str, offset + 3)));
 	}
 	else
 	{
 		int value = 0;
-		int sign = str[0] == '-' ? -1 : 1;
+		int sign = str[offset] == '-' ? -1 : 1;
 
-		for (int i = str[0] == '-' ? 1 : 0; str[i] != ' ' && str[i] != ')'; ++i)
+		for (int i = offset + (str[offset] == '-' ? 1 : 0); str[i] != ' ' && str[i] != ')'; ++i)
 		{
 			value = 10 * value + str[i] - '0';
 		}
@@ -164,13 +169,16 @@ ArithmeticTree * createTree(char* filename)
 	fgets(str, 200, file);
 	fclose(file);
 
+	printf("\"%s\"\n", str);
+
 	return new ArithmeticTree{ createNode(str) };
 }
 
-void deleteTree(ArithmeticTree* tree)
+void deleteTree(ArithmeticTree* &tree)
 {
 	deleteNode(tree->root);
 	delete tree;
+	tree = nullptr;
 }
 
 int arithmeticTreeResult(ArithmeticTree* tree)

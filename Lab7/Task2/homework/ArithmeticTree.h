@@ -13,7 +13,7 @@ ArithmeticTree* createTree(char* filename);
 	removing of Arithmetic Tree
 	@param tree - tree to removie
 */
-void deleteTree(ArithmeticTree* tree); 
+void deleteTree(ArithmeticTree* &tree); 
 
 /**
 	Counting value of Arithmetic Tree

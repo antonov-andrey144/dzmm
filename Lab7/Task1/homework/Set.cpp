@@ -1,8 +1,7 @@
 #include <iostream>
 #include "Set.h"
 
-struct Node 
-{
+struct Node {
 	Value value;
 	Node* left;
 	Node* right;
@@ -122,7 +121,7 @@ void removeFromNode(Node* &node, Value value)
 			}
 
 			Node* tempNode = rightMostNode(node->left);
-			node->value = tempNode->value;
+			node->value = tempNode->value;						
 
 			removeFromNode(node->left, node->value);
 		}
@@ -191,7 +190,7 @@ Set* createSet()
 	return newSet;
 }
 
-void deleteSet(Set* set)
+void deleteSet(Set* &set)
 {
 	if (set->root == nullptr)
 	{
@@ -199,6 +198,7 @@ void deleteSet(Set* set)
 	}
 	deleteNode(set->root);
 	delete set;
+	set = nullptr;
 }
 
 void addToSet(Set* set, Value value)

@@ -11,5 +11,8 @@ int main()
 	printf("%d\n", arithmeticTreeResult(tree));
 
 	deleteTree(tree);
+
+	int pause = 0;
+	scanf("%d", &pause);
 	return 0;
 }

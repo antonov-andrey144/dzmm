@@ -2,7 +2,7 @@
 #include <iostream>
 #include <time.h>
 
-void swap(int &a, int &b) 
+void swap(int &a, int &b)
 {
 	int c = a;
 	a = b;
@@ -63,7 +63,11 @@ void countingSort(int *arr, int len, int n)
 
 void printMenu()
 {
-	printf("\tМеню\n1 - заполнить массив случайными значениями/перезаполнить массив\n2 - сортировка подсчётом\n3 - сортировка пузырьком\n0 - выход\n\tВаш выбор: ");
+	printf("\tМеню\n1 - заполнить массив случайными значениями/перезаполнить массив\n"
+		"2 - сортировка подсчётом\n"
+		"3 - сортировка пузырьком\n"
+		"0 - выход\n"
+		"\tВаш выбор: ");
 }
 
 void menuWorking(int choice, int *arr, int len, int n)
@@ -71,27 +75,32 @@ void menuWorking(int choice, int *arr, int len, int n)
 	switch (choice)
 	{
 	case 1:
+	{
+
 		initArray(arr, len, n);
 		printf("Неотсортированный массив: \n");
 		printArray(arr, len);
 		printMenu();
 		break;
+	}
 
 	case 2:
+	{
 		countingSort(arr, len, n);
 		printf("Отсортированный массив: \n");
 		printArray(arr, len);
 		printMenu();
 		break;
+	}
 
 	case 3:
+	{
 		bubbleSort(arr, len);
 		printf("Отсортированный массив: \n");
 		printArray(arr, len);
 		printMenu();
-
 	}
-
+	}
 }
 
 int main()

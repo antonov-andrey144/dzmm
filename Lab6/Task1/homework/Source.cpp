@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include "Stack.h" 
 
@@ -64,6 +65,7 @@ int main()
 	printf("%d\n", countReversePolishNotation(str));
 	char str1[40] = "2 3 + 4 +";
 	printf("%d\n", countReversePolishNotation(str1));
-	system("PAUSE");
+	int pause = 0;
+	scanf("%d", &pause);
 	return EXIT_SUCCESS;
 }

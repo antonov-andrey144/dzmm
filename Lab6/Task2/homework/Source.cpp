@@ -38,6 +38,7 @@ bool isBalanced(char* str)
 			if (isClosed(str[index]))
 			{
 				result &= isPair(pop(stack), str[index]);
+				break;
 			}
 		}
 		++index;
@@ -55,6 +56,7 @@ int main()
 	char str[400] = "()(asdf)sdf(gs)dfg(sdf(gs(dfg{a}{wer}asdf{a[sdf]asdf[qw]er[as]df[asdf]a[sdf[aqwer[zsdf]as{df}asd{qwer[[sdf]asd]f}werasdf]as]dfwer}sdfa)))";
 	printf(isBalanced(str) ? "Строка сбалансирована\n" : "Строка не сбалансирована\n");
 
-	system("PAUSE");
+	int pause = 0;
+	scanf("%d", &pause);
 	return EXIT_SUCCESS;
 }
