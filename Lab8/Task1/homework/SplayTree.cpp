@@ -35,13 +35,13 @@ bool isRightSon(SplayNode* node)
 	return (node != nullptr && node->parent != nullptr && node->parent->right == node);
 }
 
-// проверка на возможность зигануть
+// проверка на возможность сделать зиг
 bool canZig(SplayTree* tree, SplayNode* node)
 {
 	return tree != nullptr && node != nullptr && tree->root != nullptr  && node->parent == tree->root;
 }
 
-// проверрка имеет ли деда
+// проверка имеет ли деда
 bool hasGrandParent(SplayTree* tree, SplayNode* node)
 {
 	return tree != nullptr && node != nullptr && tree->root != nullptr && node->parent != nullptr && node->parent->parent != nullptr;
@@ -234,7 +234,6 @@ SplayNode* splayNodeAdd(SplayNode* node, int key, Element element)
 	}
 }
 
-
 void splayTreeAdd(SplayTree* &tree, int key, Element element)
 {
 	if (tree == nullptr)
@@ -316,7 +315,7 @@ void deleteRoot(SplayTree * tree)
 	}
 	else
 	{
-		SplayNode* min = minNode(root->right);
+		SplayNode* min = minNode(root->right); // лучший претендент стать корнем
 		if (min->parent != root)
 		{
 			assignLeftSon(min->parent, min->right);
