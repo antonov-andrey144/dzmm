@@ -261,7 +261,7 @@ SplayNode* find(SplayNode* node, int key)
 	{
 		return find(node->left, key);
 	}
-	else if (node->key > key)
+	else
 	{
 		return find(node->right, key);
 	}
@@ -294,7 +294,8 @@ char* splayTreeGetByKey(SplayTree * tree, int key)
 	}
 }
 
-SplayNode* minNode(SplayNode *node) {
+SplayNode* minNode(SplayNode *node) 
+{
 	while (node->left)
 	{
 		node = node->left;

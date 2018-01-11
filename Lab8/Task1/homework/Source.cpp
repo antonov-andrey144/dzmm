@@ -66,8 +66,6 @@ int main()
 	} while (choice != 0);
 
 	splayTreeDelete(tree);
-	char *pause = new char[500];
-	gets_s(pause, 500);
-	delete[] pause;
+	delete[] element;
 	return 0;
 }
