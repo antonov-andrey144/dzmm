@@ -97,6 +97,11 @@ void printMenu()
 
 void initList(CircleList &list, int len, int a, int b)
 {
+	if (list.start != nullptr)
+	{
+		deleteList(list);
+		CircleList list;
+	}
 	for (int i = 0; i < len; ++i)
 	{
 		addElement(list, rand() % (b - a) + a);
